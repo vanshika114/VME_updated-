@@ -1,4 +1,4 @@
-import { SemesterCards } from "@/components/home/SemesterCards";
+import { YearCards } from "@/components/home/YearCards";
 
 export default function HomePage() {
   return (
@@ -11,7 +11,7 @@ export default function HomePage() {
           Syllabus, practical files, and previous year questions for Guru Gobind Singh Indraprastha University — all in one place.
         </p>
       </section>
-      <SemesterCards />
+      <YearCards />
     </div>
   );
 }

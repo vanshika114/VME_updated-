@@ -5,26 +5,26 @@ import type { Subject } from "./types";
 import { BRANCH_SLUGS } from "@/constants/branches";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
-const VALID_SEMS = [1, 2, 3, 4, 5, 6, 7, 8];
+const VALID_YEARS = [1, 2, 3, 4];
 
-export function getValidSemesters(): number[] {
-  return VALID_SEMS;
+export function getValidYears(): number[] {
+  return VALID_YEARS;
 }
 
-export function getAllSemesterParams(): { sem: string }[] {
-  return VALID_SEMS.map((s) => ({ sem: String(s) }));
+export function getAllYearParams(): { year: string }[] {
+  return VALID_YEARS.map((y) => ({ year: String(y) }));
 }
 
 export function getBranches(): string[] {
   return BRANCH_SLUGS;
 }
 
-export function getAllBranchParams(sem: number): { sem: string; branch: string }[] {
-  return BRANCH_SLUGS.map((branch) => ({ sem: String(sem), branch }));
+export function getAllBranchParams(year: number): { year: string; branch: string }[] {
+  return BRANCH_SLUGS.map((branch) => ({ year: String(year), branch }));
 }
 
-export function getSubjectsForBranchSem(sem: number, branch: string): Subject[] {
-  const dir = path.join(CONTENT_DIR, `sem${sem}`, branch);
+export function getSubjectsForBranchYear(year: number, branch: string): Subject[] {
+  const dir = path.join(CONTENT_DIR, `year${year}`, branch);
   if (!fs.existsSync(dir)) return [];
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
   return files.map((file) => {
@@ -36,11 +36,11 @@ export function getSubjectsForBranchSem(sem: number, branch: string): Subject[] 
 }
 
 export function getSubjectBySlug(
-  sem: number,
+  year: number,
   branch: string,
   slug: string
 ): Subject | null {
-  const filePath = path.join(CONTENT_DIR, `sem${sem}`, branch, `${slug}.mdx`);
+  const filePath = path.join(CONTENT_DIR, `year${year}`, branch, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data } = matter(raw);
@@ -48,16 +48,16 @@ export function getSubjectBySlug(
 }
 
 export function getAllSubjectParams(): {
-  sem: string;
+  year: string;
   branch: string;
   subject: string;
 }[] {
-  const params: { sem: string; branch: string; subject: string }[] = [];
-  for (const sem of VALID_SEMS) {
+  const params: { year: string; branch: string; subject: string }[] = [];
+  for (const year of VALID_YEARS) {
     for (const branch of BRANCH_SLUGS) {
-      const subjects = getSubjectsForBranchSem(sem, branch);
+      const subjects = getSubjectsForBranchYear(year, branch);
       for (const s of subjects) {
-        params.push({ sem: String(sem), branch, subject: s.slug });
+        params.push({ year: String(year), branch, subject: s.slug });
       }
     }
   }
